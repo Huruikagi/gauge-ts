@@ -61,6 +61,24 @@ Once the initialization is done run `npm install` to get all the required depend
 Now you can run `gauge run specs` to run your project.
 Open the project in your favorite editor and start adding some new tests.
 
+### Configure the package runner
+
+By default, gauge-ts starts `ts-node` with `npx`. To use the package manager
+configured for your project, set `GAUGE_TS_PACKAGE_RUNNER` to one of `npm`,
+`pnpm`, `yarn`, or `bun`. For example, in a Gauge environment properties file:
+
+```properties
+GAUGE_TS_PACKAGE_RUNNER = pnpm
+```
+
+The corresponding commands are `npm exec --`, `pnpm exec`, `yarn exec`, and
+`bun x`. You can also set the value to `npx` explicitly.
+
+The selected package runner must be available on `PATH` in the environment
+where Gauge is started.
+
+The `yarn` option targets modern Yarn releases (Yarn 2 and later).
+
 
 ## APIS
 

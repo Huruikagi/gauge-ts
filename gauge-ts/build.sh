@@ -24,7 +24,7 @@ function package() {
     checkCommand "zip"
     npm run clean:build
     mkdir -p deploy
-    cp launcher.* deploy
+    cp launcher.* launcher-runner.cjs deploy
     cp ts.json deploy
     mkdir -p artifacts
     (export version=$(version) && cd deploy && zip -r ../artifacts/gauge-ts-$version.zip .)
