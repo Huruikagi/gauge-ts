@@ -22,6 +22,7 @@ $tasks.Add('package', @{
             npm run clean:build
             mkdir -p deploy
             Copy-Item launcher.* deploy
+            Copy-Item launcher-runner.cjs deploy
             Copy-Item ts.json deploy
             mkdir artifacts
             $version = version

@@ -11,6 +11,9 @@ if (Number.parseInt(version[0]) < 20) {
 }
 
 import { spawn } from "node:child_process";
+import launcherRunner from "./launcher-runner.cjs";
+
+const { getPackageRunner } = launcherRunner;
 
 const { GAUGE_PROJECT_ROOT } = process.env;
 
@@ -24,20 +27,26 @@ function hasModule(name) {
 }
 
 function startCommand() {
+  const useShell = process.platform === "win32";
+  const shellQuote = useShell ? '"' : "";
+
   const opts = [
     "ts-node",
     "--esm",
     "-r",
     "tsconfig-paths/register",
     "-e",
-    `"import { start } from 'gauge-ts/dist/RunnerServer'; start();"`,
+    `${shellQuote}import { start } from 'gauge-ts/dist/RunnerServer'; start();${shellQuote}`,
   ];
 
-  const runner = spawn("npx", opts, {
+  const [command, ...runnerArgs] = getPackageRunner();
+  const runner = spawn(command, [...runnerArgs, ...opts], {
     env: process.env,
     silent: false,
     stdio: "inherit",
-    shell: true,
+    // Package-manager shims are .cmd files on Windows and require cmd.exe.
+    // `command` is safe to pass to the shell because it comes from a fixed map.
+    shell: useShell,
     cwd: GAUGE_PROJECT_ROOT,
   });
   runner.on("error", (err) => {
